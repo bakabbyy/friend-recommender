@@ -51,13 +51,16 @@ The data I will use for this project is Twitter data extracted from the Twitter 
 
 ### user_attributes
 
-| Independent Variable | Type      | Description                                                  |
-| -------------------- | --------- | ------------------------------------------------------------ |
-| user_id              | Int       | Unique identifier of the account.                            |
-| follower_count       | Int       | The number of followers the user has.                        |
-| following_count      | Int       | The number of accounts the user follows.                     |
-| following_ids        | Int, List | List of IDs corrseponding to the accounts the user follows.  |
-| follower_ids         | Int, List | List of IDs corresponding to the accounts that follow the parent user. |
+| Independent Variable | Type            | Description                                                  |
+| -------------------- | --------------- | ------------------------------------------------------------ |
+| user_id              | Int             | Unique identifier of the account.                            |
+| screen_name          | String (Object) | Username of the account.                                     |
+| followers_count      | Int             | The number of followers the user has.                        |
+| friends_count        | Int             | The number of accounts the user follows.                     |
+| favorites_count      | Int             | The number of tweets the user has favorited.                 |
+| statuses_count       | Int             | The number of statuses the user has favorited.               |
+| following_ids        | Int, List       | List of IDs corrseponding to the accounts the user follows.  |
+| follower_ids         | Int, List       | List of IDs corresponding to the accounts that follow the parent user. |
 
 ## Known Unknowns/Barriers
 

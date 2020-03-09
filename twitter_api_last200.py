@@ -1,6 +1,4 @@
 # import packages and authorize application
-from collections import defaultdict
-import numpy as np
 import json
 import tweepy
 from twitter_creds import *
@@ -22,33 +20,9 @@ def user_timeline(user_id):
     :param user_id: Unique identifier of the Twitter account to fetch tweets
     :return: JSON file export of tweet contents and metadata
     """
-    timeline_tweets = []
 
-    try:
-        # make initial request for most recent tweets
-        timeline = api.user_timeline(user_id=user_id, count=200)
-
-        # save most recent tweets
-        timeline_tweets.extend(timeline)
-
-        # save the id of the oldest tweet less one
-        oldest = timeline_tweets[-1]['id'] - 1
-
-        # continue where from the last id until there are no tweets left to collect
-        while len(timeline) > 0:
-            print(f'getting tweets before {oldest}s')
-
-            # all subsequent requests use the max_id param to prevent duplicates
-            timeline = api.user_timeline(user_id=user_id, count=200, max_id=oldest)
-
-            timeline_tweets.extend(timeline)
-
-            oldest = timeline_tweets[-1]['id'] - 1
-
-            print(f'...{len(timeline_tweets)}s tweets downloaded so far')
-
-    except IndexError:
-        pass
+    # request last 200 tweets from user timeline
+    timeline = api.user_timeline(user_id=user_id, count=200)
 
     # extract fields into a list of dictionaries
     tweets_dict = [{'id': tweet['id'], 'created_at': tweet['created_at'],
@@ -57,7 +31,7 @@ def user_timeline(user_id):
                     'in_reply_to_screen_name': tweet['in_reply_to_screen_name'],
                     'in_reply_to_user_id': tweet['in_reply_to_user_id'],
                     'favorite_count': tweet['favorite_count'], 'retweet_count': tweet['retweet_count'],
-                    'text': tweet['text']} for tweet in timeline_tweets]
+                    'text': tweet['text']} for tweet in timeline]
 
     return tweets_dict
 
@@ -70,33 +44,9 @@ def user_favorites(user_id):
     :param user_id: Unique identifier of the Twitter account to fetch tweets
     :return: JSON file export of tweet contents and metadata
     """
-    favorite_tweets = []
 
-    try:
-        # make initial request for most recent tweets
-        favorites = api.favorites(user_id=user_id, count=200)
-
-        # save most recent tweets
-        favorite_tweets.extend(favorites)
-
-        # save the id of the oldest tweet less one
-        oldest = favorite_tweets[-1]['id'] - 1
-
-        # continue where from the last id until there are no tweets left to collect
-        while len(favorites) > 0:
-            print(f'getting tweets before {oldest}s')
-
-            # all subsequent requests use the max_id param to prevent duplicates
-            favorites = api.favorites(user_id=user_id, count=200, max_id=oldest)
-
-            favorite_tweets.extend(favorites)
-
-            oldest = favorite_tweets[-1]['id'] - 1
-
-            print(f'...{len(favorite_tweets)}s tweets downloaded so far')
-
-    except IndexError:
-        pass
+    # request last 200 favorited tweets
+    favorites = api.favorites(user_id=user_id, count=200)
 
     # extract fields into a list of dictionaries
     favorites_dict = [{'favorited_by_id': user_id, 'id': tweet['id'],
@@ -108,7 +58,7 @@ def user_favorites(user_id):
                        'in_reply_to_user_id': tweet['in_reply_to_user_id'],
                        'favorite_count': tweet['favorite_count'],
                        'retweet_count': tweet['retweet_count'],
-                       'text': tweet['text']} for tweet in favorite_tweets]
+                       'text': tweet['text']} for tweet in favorites]
 
     return favorites_dict
 
@@ -120,7 +70,6 @@ def user_profile(user_id):
     :param user_id: Unique identifier of the Twitter account to information
     :return: JSON file export of tweet contents and metadata
     """
-
     # get user profile information
     info = api.get_user(user_id=user_id)
 
@@ -133,46 +82,17 @@ def user_profile(user_id):
 
     # use cursor to page through all friends and create list of friend ids
     all_friends = []
-    friends = api.friends_ids(user_id=user_id, count=200)
+    for friend in tweepy.Cursor(api.friends_ids, user_id=user_id, count=200).pages():
+        all_friends.extend(friend['ids'])
 
-    # save most recent tweets
-    all_friends.extend(friends['ids'])
-
-    # save the id of the oldest tweet less one
-    oldest = all_friends[-1]
-
-    # continue where from the last id until there are no tweets left to collect
-    while len(friends) > 0:
-
-        # all subsequent requests use the max_id param to prevent duplicates
-        friends = api.friends_ids(user_id=user_id, count=200, max_id=oldest)
-
-        all_friends.extend(friends['ids'])
-
-        oldest = all_friends[-1]
-
-    # use cursor to page through all friends and create list of friend ids
+    # use cursor to page through all followers and create list of follower ids
     all_followers = []
-    followers = api.followers_ids(user_id=user_id, count=200)
-
-    # save most recent tweets
-    all_followers.extend(followers['ids'])
-
-    # save the id of the oldest tweet less one
-    oldest = all_followers[-1]
-
-    # continue where from the last id until there are no tweets left to collect
-    while len(followers) > 0:
-        # all subsequent requests use the max_id param to prevent duplicates
-        followers = api.followers_ids(user_id=user_id, count=200, max_id=oldest)
-
-        all_followers.extend(followers['ids'])
-
-        oldest = all_followers[-1]
+    for follower in tweepy.Cursor(api.followers_ids, user_id=user_id, count=200).pages():
+        all_followers.extend(follower['ids'])
 
     # add lists of friends and followers ids to user_info dictionary
-    profile_dict['friend_ids'] = all_friends
     profile_dict['follower_ids'] = all_followers
+    profile_dict['friend_ids'] = all_friends
 
     return profile_dict
 
