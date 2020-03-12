@@ -1,6 +1,4 @@
 # import packages and authorize application
-from collections import defaultdict
-import numpy as np
 import json
 import tweepy
 from twitter_creds import *
@@ -8,10 +6,7 @@ from twitter_creds import *
 # pass credentials to authorize Twitter app
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
-api = tweepy.API(auth,
-                 parser=tweepy.parsers.JSONParser(),
-                 wait_on_rate_limit=True,
-                 wait_on_rate_limit_notify=True)
+api = tweepy.API(auth, parser=tweepy.parsers.JSONParser(), wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 
 def user_timeline(user_id):
@@ -120,7 +115,6 @@ def user_profile(user_id):
     :param user_id: Unique identifier of the Twitter account to information
     :return: JSON file export of tweet contents and metadata
     """
-
     # get user profile information
     info = api.get_user(user_id=user_id)
 
@@ -133,70 +127,64 @@ def user_profile(user_id):
 
     # use cursor to page through all friends and create list of friend ids
     all_friends = []
-    friends = api.friends_ids(user_id=user_id, count=200)
+    for friend in tweepy.Cursor(api.friends_ids, user_id=user_id, count=200).pages():
+        all_friends.extend(friend['ids'])
 
-    # save most recent tweets
-    all_friends.extend(friends['ids'])
-
-    # save the id of the oldest tweet less one
-    oldest = all_friends[-1]
-
-    # continue where from the last id until there are no tweets left to collect
-    while len(friends) > 0:
-
-        # all subsequent requests use the max_id param to prevent duplicates
-        friends = api.friends_ids(user_id=user_id, count=200, max_id=oldest)
-
-        all_friends.extend(friends['ids'])
-
-        oldest = all_friends[-1]
-
-    # use cursor to page through all friends and create list of friend ids
+    # use cursor to page through all followers and create list of follower ids
     all_followers = []
-    followers = api.followers_ids(user_id=user_id, count=200)
-
-    # save most recent tweets
-    all_followers.extend(followers['ids'])
-
-    # save the id of the oldest tweet less one
-    oldest = all_followers[-1]
-
-    # continue where from the last id until there are no tweets left to collect
-    while len(followers) > 0:
-        # all subsequent requests use the max_id param to prevent duplicates
-        followers = api.followers_ids(user_id=user_id, count=200, max_id=oldest)
-
-        all_followers.extend(followers['ids'])
-
-        oldest = all_followers[-1]
+    for follower in tweepy.Cursor(api.followers_ids, user_id=user_id, count=200).pages():
+        all_followers.extend(follower['ids'])
 
     # add lists of friends and followers ids to user_info dictionary
-    profile_dict['friend_ids'] = all_friends
     profile_dict['follower_ids'] = all_followers
+    profile_dict['friend_ids'] = all_friends
 
     return profile_dict
 
 
-if __name__ == '__main__':
-    # initialize empty containers with host account's info
-    timelines = [user_timeline(2649540547)]
-    favorites = [user_favorites(2649540547)]
-    profiles = [user_profile(2649540547)]
+# initialize empty containers with host account's info
+timelines = [user_timeline(2649540547)]
+favorites = [user_favorites(2649540547)]
+profiles = [user_profile(2649540547)]
 
-    # loop through friends list and extract information for each friend and append
-    followers_list = profiles[0]['follower_ids']
-    start, stop = 0, 20
-    for id in followers_list[start:stop]:
-        timelines.append(user_timeline(id))
-        favorites.append(user_favorites(id))
-        profiles.append(user_profile(id))
+# extract follower ids list from my twitter account
+my_followers = profiles[0]['follower_ids']
 
-    # export each object to json files
-    with open(f'timelines_{stop}.json', 'w') as fout:
-        json.dump(timelines, fout)
 
-    with open(f'favorites_{stop}.json', 'w') as fout:
-        json.dump(favorites, fout)
 
-    with open(f'profiles._{stop}json', 'w') as fout:
-        json.dump(profiles, fout)
+#################### CREATE FUNCTION TO SIMPLIFY THE BELOW ####################
+
+
+
+# loop through follower ids and add list of timeline tweets for each user
+for idx, user_id in enumerate(my_followers):
+    try:
+        timelines.append(user_timeline(user_id))
+        print('Appended {} of {} timelines...'.format(idx+1, len(my_followers)))
+    except tweepy.TweepError:
+        print("Failed to run the command on that user, Skipping...")
+
+with open(f'timelines_{stop}.json', 'w') as fout:
+    json.dump(timelines, fout)
+
+# loop through follower ids and add list of favorite tweets for each user
+for idx, user_id in enumerate(my_followers):
+    try:
+        favorites.append(user_favorites(user_id))
+        print('Appended {} of {} timelines...'.format(idx+1, len(my_followers)))
+    except tweepy.TweepError:
+        print("Failed to run the command on that user, Skipping...")
+
+with open(f'favorites_{stop}.json', 'w') as fout:
+    json.dump(favorites, fout)
+
+# loop through follower ids and add list of profiles
+for idx, user_id in enumerate(my_followers):
+    try:
+        profiles.append(user_profile(user_id))
+        print('Appended {} of {} timelines...'.format(idx+1, len(my_followers)))
+    except tweepy.TweepError:
+        print("Failed to run the command on that user, Skipping...")
+
+with open(f'profiles._{stop}json', 'w') as fout:
+    json.dump(profiles, fout)
