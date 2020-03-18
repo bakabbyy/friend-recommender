@@ -2,3 +2,11 @@
 .idea/dictionaries/baka_brooks.xml
 *.json
 proposal.md
+*.png
+data/.DS_Store
+flask/.DS_Store
+images/.DS_Store
+.ipynb_checkpoints/test_clean-checkpoint.ipynb
+*.pkl
+test_clean.ipynb
+twitter_creds.py
