@@ -151,11 +151,6 @@ profiles = [user_profile(2649540547)]
 my_followers = profiles[0]['follower_ids']
 
 
-
-#################### CREATE FUNCTION TO SIMPLIFY THE BELOW ####################
-
-
-
 # loop through follower ids and add list of timeline tweets for each user
 for idx, user_id in enumerate(my_followers):
     try:

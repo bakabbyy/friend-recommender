@@ -17,3 +17,5 @@ twitter_creds.py
 .ipynb_checkpoints/[LOCAL] nlp_modeling_w_lemma-checkpoint.ipynb
 .ipynb_checkpoints/cleaning_w_lemma-checkpoint.ipynb
 [LOCAL] nlp_modeling_w_lemma.ipynb
+dashboard/.~twitter_recommendation_engine__14690.twbr
+.ipynb_checkpoints/recommender-checkpoint.ipynb
