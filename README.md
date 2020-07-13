@@ -1,16 +1,4 @@
 # User Personality Recommender
-**Motivation**
-
-The aim for this project is to create healthier digital spaces, to promote meaningful interactions and foster real relationships between people. To find connections without the need for a flood of content, but by trying to find a deeper understanding of an individual using other attributes of their digital footprint.
-
-**Factoids**
-
-- A recent [Cigna study](https://www.cnbc.com/2020/01/23/loneliness-is-rising-younger-workers-and-social-media-users-feel-it-most.html) found that 73% of Gen Z (18–22 year olds, notably the first generation to grow up with technology since day one) report “sometimes” or “always” feeling alone, up from 69% the previous year.
-
-- Every second, approximately 6,000 Tweets are tweeted on Twitter, which corresponds to over 350,000 tweets sent per minute, 500 million tweets per day and around 200 billion tweets per year [(via Brandwatch)](https://www.brandwatch.com/blog/twitter-stats-and-statistics/).
-
-- [Pew Research Center](https://www.pewresearch.org/internet/fact-sheet/social-media/) states that currently, 72% of the public uses some type of social media.
-
 **Problem Statement** 
 
 In this project, I've used three Twitter data sources to create a feature set by utilizing NLP to derive personality classifications via KMeans segmentation. These features were used as the basis for a recommendation engine to connect Twitter users. 
