@@ -83,4 +83,4 @@ All data is extracted from the Twitter API via the tweepy package.
 
 
 
-The slide deck for this project can be found [here](https://github.com/bakabrooks/twitter-nlp-sentiment/blob/master/project-04-slides.pdf).
+The slide deck for this project can be found [here](https://github.com/bakabrooks/friend-recommender/blob/master/slides.pdf).
