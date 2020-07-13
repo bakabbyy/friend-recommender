@@ -1,6 +1,8 @@
 # User Personality Recommender
 **Motivation**
 
+Social media as a whole is the new face of the modern day ad industry. Everyday, platforms are in a constant battle for consumer attention as their sole focus is to monetize that attention in a cycle dubbed the ["attention economy"](https://www.nngroup.com/articles/attention-economy/). But what remains unseen is the impact that the constant bombardment of content has had on society, especially to young people. In a world that favors the sources that draw the most attention, we've lost what it means to be authentic in favor of flamboyant personas.
+
 The aim for this project is to create healthier digital spaces. I want to promote meaningful interactions and foster real relationships between people. To find connections without the need for a flood of content, but by trying to find a deeper understanding of an individual using other attributes of their digital footprint.
 
 **Factoids**
@@ -67,19 +69,7 @@ All data is extracted from the Twitter API via the tweepy package.
 
 
 
-[cleaning.ipynb](https://github.com/bakabrooks/friend-recommender/blob/master/cleaning.ipynb) contains the pipeline to pre-process all Tweet text sources for modeling. This includes, but not limited to: removal of stopwords, tokenization, lemmatization, and vectorization.
-
-
-
-[nlp_modeling.ipynb](https://github.com/bakabrooks/friend-recommender/blob/master/nlp_modeling.ipynb) contains the analysis of Tweet text (i.e. sentiment), derivation of topics via non-negative matrix factorization, and clustering via KMeans. Visualization of clusters done with UMap.
-
-
-
-[personality_classification.ipynb](https://github.com/bakabrooks/friend-recommender/blob/master/personality_classification.ipynb) contains the personality classification of Twitter users via the IBM Watson Personality Insights API. The file outputs a dataframe of each user's personality vector.
-
-
-
-[recommender.ipynb](https://github.com/bakabrooks/friend-recommender/blob/master/recommender.ipynb) contains the recommendation algorithm, combining the user personalities and clusters derived. The file also contains additional feature engineering.
+[cleaning.ipynb](https://github.com/bakabrooks/friend-recommender/blob/master/cleaning.ipynb) shows the process of training various supervised learning models, tuning the models and evaluating their effectiveness.
 
 
 
