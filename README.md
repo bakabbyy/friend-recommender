@@ -1,7 +1,7 @@
 # User Personality Recommender
 **Motivation**
 
-The aim for this project is to create healthier digital spaces. I want to promote meaningful interactions and foster real relationships between people. To find connections without the need for a flood of content, but by trying to find a deeper understanding of an individual using other attributes of their digital footprint.
+The aim for this project is to create healthier digital spaces, to promote meaningful interactions and foster real relationships between people. To find connections without the need for a flood of content, but by trying to find a deeper understanding of an individual using other attributes of their digital footprint.
 
 **Factoids**
 
