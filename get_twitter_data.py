@@ -31,7 +31,7 @@ def user_timeline(user_id):
 
         # continue where from the last id until there are no tweets left to collect
         while len(timeline) > 0:
-            print(f'getting tweets before {oldest}s')
+            print('getting tweets before {}s'.format(oldest))
 
             # all subsequent requests use the max_id param to prevent duplicates
             timeline = api.user_timeline(user_id=user_id, count=200, max_id=oldest)
@@ -40,7 +40,7 @@ def user_timeline(user_id):
 
             oldest = timeline_tweets[-1]['id'] - 1
 
-            print(f'...{len(timeline_tweets)}s tweets downloaded so far')
+            print('...{}s tweets downloaded so far'.format(len(timeline_tweets)))
 
     except IndexError:
         pass
@@ -79,7 +79,7 @@ def user_favorites(user_id):
 
         # continue where from the last id until there are no tweets left to collect
         while len(favorites) > 0:
-            print(f'getting tweets before {oldest}s')
+            print('getting tweets before {}s'.format(oldest))
 
             # all subsequent requests use the max_id param to prevent duplicates
             favorites = api.favorites(user_id=user_id, count=200, max_id=oldest)
@@ -88,7 +88,7 @@ def user_favorites(user_id):
 
             oldest = favorite_tweets[-1]['id'] - 1
 
-            print(f'...{len(favorite_tweets)}s tweets downloaded so far')
+            print('...{}s tweets downloaded so far'.format(len(favorite_tweets)))
 
     except IndexError:
         pass
@@ -159,7 +159,7 @@ for idx, user_id in enumerate(my_followers):
     except tweepy.TweepError:
         print("Failed to run the command on that user, Skipping...")
 
-with open(f'timelines_{stop}.json', 'w') as fout:
+with open('timelines_{}.json'.format(stop), 'w') as fout:
     json.dump(timelines, fout)
 
 # loop through follower ids and add list of favorite tweets for each user
@@ -170,7 +170,7 @@ for idx, user_id in enumerate(my_followers):
     except tweepy.TweepError:
         print("Failed to run the command on that user, Skipping...")
 
-with open(f'favorites_{stop}.json', 'w') as fout:
+with open('favorites_{}.json'.format(stop), 'w') as fout:
     json.dump(favorites, fout)
 
 # loop through follower ids and add list of profiles
@@ -181,5 +181,5 @@ for idx, user_id in enumerate(my_followers):
     except tweepy.TweepError:
         print("Failed to run the command on that user, Skipping...")
 
-with open(f'profiles._{stop}json', 'w') as fout:
+with open('profiles._{}json'.format(stop), 'w') as fout:
     json.dump(profiles, fout)
